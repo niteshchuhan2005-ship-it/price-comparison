@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PriceDost - Real Price</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#f1f3f6;padding-bottom:70px}
+.top{display:flex;gap:10px;padding:10px}
+.top div{flex:1;padding:12px;text-align:center;border-radius:10px;font-weight:bold;font-size:18px}
+.yellow{background:#ffe500}
+.white{background:white}
+.loc{padding:5px 12px;font-size:14px}
+.loc span{color:#2874f0;font-weight:bold}
+.search{margin:10px;background:white;border:2px solid #2874f0;border-radius:10px;display:flex;align-items:center;padding:12px}
+.search input{border:none;outline:none;width:100%;font-size:18px;margin-left:8px}
+.search button{background:#2874f0;color:white;border:none;padding:10px 15px;border-radius:8px;font-weight:bold}
+.cats{display:flex;overflow-x:auto;background:white;padding:10px;gap:20px;white-space:nowrap}
+.cats div{text-align:center;font-size:14px}
+.cats b{border-bottom:3px solid #2874f0;padding-bottom:5px}
+.banner{margin:12px;background:linear-gradient(90deg,#dbeafe,#bfdbfe);padding:20px;border-radius:15px}
+.banner h2{font-size:24px}
+.banner h3{margin-top:5px}
+.trend{margin:12px;background:#e11d48;padding:15px;border-radius:15px;color:white}
+.cards{display:flex;gap:10px;margin:12px}
+.card{flex:1;background:white;border-radius:10px;padding:10px;text-align:center}
+.card img{width:100%;border-radius:8px;height:110px;object-fit:cover}
+.result{background:white;margin:12px;padding:15px;border-radius:12px;display:flex;justify-content:space-between;align-items:center}
+.result b{font-size:17px}
+.price{font-size:20px;font-weight:bold}
+.buy{display:block;text-align:center;background:#ff9f00;color:white;padding:10px;border-radius:8px;text-decoration:none;margin-top:10px;font-weight:bold}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:12px;border-top:1px solid #ddd;font-weight:bold}
+.bottom .active{color:#2874f0}
+</style>
+</head>
+<body>
+
+<div class="top">
+<div class="yellow">✦ PriceDost</div>
+<div class="white">✈️ Travel</div>
+</div>
+
+<div class="loc">📍 Location not set <span>Select delivery location ></span></div>
+
+<div class="search">
+<span>🔍</span>
+<input id="q" placeholder="Search for Products" value="phone">
+<button onclick="searchPrice()">Check</button>
+</div>
+
+<div class="cats">
+<div><span>🛍️</span><br><b>For You</b></div>
+<div><span>👕</span><br>Fashion</div>
+<div><span>📱</span><br>Mobiles</div>
+<div><span>💻</span><br>Electronics</div>
+<div><span>💄</span><br>Beauty</div>
+<div><span>💡</span><br>Home</div>
+</div>
+
+<div class="banner">
+<h2>Vibe2 PRO 5G</h2>
+<h3>From ₹14,999*</h3>
+<p>6000 mAh | 33 W fast charger</p>
+<p>💳 10% Instant Discount</p>
+</div>
+
+<div id="results"></div>
+
+<div class="trend">
+<h3>Trends you may like</h3>
+</div>
+<div class="cards">
+<div class="card"><img src="https://images.unsplash.com/photo-1463320726281-696a485928c7?w=400"><p>Artificial Plant</p><b>₹499</b></div>
+<div class="card"><img src="https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?w=400"><p>Trolley Bag</p><b>₹1,299</b></div>
+</div>
+
+<div class="bottom">
+<span class="active">🏠 Home</span>
+<span>⊞ Categories</span>
+<span>👤 Account</span>
+<span>🛒 Cart</span>
+
+</div>
+
+<script>
+async function searchPrice(){
+let query = document.getElementById('q').value;
+let box = document.getElementById('results');
+box.innerHTML = "🔍 Searching real price...";
+let url = `/search?q=${query}`;
+try{
+let res = await fetch(url);
+let data = await res.json();
+let items = data || [];
+if(items.length==0){ box.innerHTML="No result mila"; return; }
+let html = "";
+items.slice(0,3).forEach(p=>{
+html += `<div class="result"><div><b>${p.title}</b><br>🛍️ ${p.source} | ⭐ ${p.rating||'4.5'}<a class="buy" href="${p.link}" target="_blank">🛒 Buy on ${p.source}</a></div><div class="price">${p.price}</div></div>`;
+});
+box.innerHTML = html;
+}catch(e){ box.innerHTML = "Error - API Key check karo"; }
+}
+searchPrice();
+</script>
+</body>
+</html>
